@@ -28,7 +28,10 @@
 ├── src/                  # React frontend (pages, components)
 ├── app.py                # optional Streamlit dashboard
 ├── vite.config.js        # proxies /api -> http://127.0.0.1:8000
-└── run_drishti.bat       # one-click launcher (Windows)
+├── run_drishti.bat       # one-click launcher - backend + frontend (Windows)
+├── run_backend.bat       # backend-only launcher (Windows)
+├── run_frontend.bat      # frontend-only launcher (Windows)
+└── stop_drishti.bat      # stop both servers (Windows)
 ```
 
 ## 🚀 Getting Started
@@ -57,6 +60,17 @@ npm run dev
 ```
 
 or on Windows, simply double-click **`run_drishti.bat`** (auto-installs missing dependencies, then starts both servers).
+
+### One-click command files (Windows)
+
+| File | What it does |
+|---|---|
+| `run_drishti.bat` | Starts **both** backend + frontend together |
+| `run_backend.bat` | Starts **only** the FastAPI backend (with auto-reload) → http://127.0.0.1:8000 |
+| `run_frontend.bat` | Starts **only** the Vite frontend → http://localhost:5173 |
+| `stop_drishti.bat` | Stops both servers (frees ports 8000 / 5173) |
+
+All launchers auto-install missing dependencies (`npm install` / `pip install -r backend/requirements.txt`) on first run.
 
 - Frontend → http://localhost:5173
 - Backend API → http://127.0.0.1:8000 (Swagger docs at `/docs`)
