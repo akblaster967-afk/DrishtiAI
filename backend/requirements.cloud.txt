@@ -1,0 +1,16 @@
+# Slim runtime requirements for cloud deployment (Render / Docker).
+# Excludes heavy optional deps (torch, torchvision, easyocr, streamlit) -
+# the backend falls back automatically when these are not installed.
+fastapi
+uvicorn
+opencv-python-headless
+numpy
+pillow
+pymupdf
+pytesseract
+pdf2image
+python-multipart
+argon2-cffi
+python-dotenv
+exifread
+c2pa-python

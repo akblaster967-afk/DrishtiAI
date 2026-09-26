@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: drishti-ai-backend
+    runtime: docker
+    plan: free
+    healthCheckPath: /docs
+    envVars:
+      - key: VERIFYSHIELD_SESSION_SECRET
+        generateValue: true
+      - key: VERIFYSHIELD_SESSION_SECURE
+        value: "true"
+      # Update after the Vercel frontend is deployed (its *.vercel.app URL)
+      - key: VERIFYSHIELD_FRONTEND_URL
+        value: "https://drishti-ai.vercel.app"
+      # Fill these in the Render dashboard during blueprint apply (SMTP for OTP emails)
+      - key: VERIFYSHIELD_SMTP_HOST
+        sync: false
+      - key: VERIFYSHIELD_SMTP_PORT
+        value: "587"
+      - key: VERIFYSHIELD_SMTP_USERNAME
+        sync: false
+      - key: VERIFYSHIELD_SMTP_PASSWORD
+        sync: false
+      - key: VERIFYSHIELD_SMTP_FROM_EMAIL
+        sync: false

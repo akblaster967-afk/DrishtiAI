@@ -51,3 +51,6 @@ backend_out.log
 backend_err.log
 vite_out.log
 vite_err.log
+
+# Vercel CLI state
+.vercel/
