@@ -54,3 +54,6 @@ vite_err.log
 
 # Vercel CLI state
 .vercel/
+
+.vercel
+.env*
