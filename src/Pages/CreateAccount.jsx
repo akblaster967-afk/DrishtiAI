@@ -13,7 +13,11 @@ async function api(path, body) {
   });
   const text = await response.text();
   let result = {};
-  try { result = text ? JSON.parse(text) : {}; } catch {}
+  try {
+    result = text ? JSON.parse(text) : {};
+  } catch {
+    // The API may return a non-JSON error body; use the fallback message below.
+  }
   if (!response.ok) {
     const detail = result.detail || result.message;
     throw new Error(detail || `Server error (${response.status}). Please start the backend and try again.`);
