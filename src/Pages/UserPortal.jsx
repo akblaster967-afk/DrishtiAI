@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Activity, ArrowRight, Camera, FilePlus2, FileText, Fingerprint, Search, ShieldCheck, Sparkles, Trash2, UserRound } from "lucide-react";
+import { Activity, ArrowRight, Camera, FilePlus2, FileText, Search, ShieldCheck, Sparkles, Trash2, UserRound } from "lucide-react";
 
 export default function UserPortal() {
   const navigate = useNavigate();
@@ -82,8 +82,6 @@ export default function UserPortal() {
   useEffect(() => {
     const query = documentSearch.trim();
     if (query.length < 2) {
-      setSearchResults([]);
-      setSearchingDocuments(false);
       return undefined;
     }
 
