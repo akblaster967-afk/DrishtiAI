@@ -18,7 +18,9 @@ export default function Navbar() {
         method: "POST",
         credentials: "include",
       });
-    } catch {}
+    } catch (error) {
+      console.warn("Logout request failed; clearing local session anyway.", error);
+    }
 
     sessionStorage.removeItem("officerId");
     sessionStorage.removeItem("checkpoint");
