@@ -16,12 +16,6 @@ const formatDobDisplay = (value = "") => {
   return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
 };
 
-const dobForApi = (value = "") => {
-  const raw = String(value || "").trim();
-  const match = raw.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-  return match ? `${match[3]}-${match[2]}-${match[1]}` : raw;
-};
-
 const DOCUMENT_CONFIG = {
   PASSPORT: {
     label: "Passport",
@@ -77,12 +71,6 @@ const FACE_CAPTURE_DOCUMENT_TYPES = new Set([
   "COLLEGE_ID",
 ]);
 
-const IDENTITY_LABELS = {
-  name: "Name",
-  dob: "Date of Birth",
-  document_number: "Document Number",
-};
-
 const ANALYSIS_STEPS = [
   ["Reading document", "OCR and image normalization"],
   ["Extracting fields", "Document-specific field rules"],
@@ -112,16 +100,34 @@ export default function ForensicDeepDive() {
 
   const [loadingProfile, setLoadingProfile] = useState(false);
 
-  const [idType, setIdType] = useState(() => location.state?.idType || "PASSPORT");
+  const [idType, setIdType] = useState(() =>
+    reverificationContext?.existingDocumentId
+      ? String(reverificationContext.idType || "PASSPORT").toUpperCase()
+      : location.state?.idType || "PASSPORT"
+  );
 
-  const [idNumber, setIdNumber] = useState("");
+  const [idNumber, setIdNumber] = useState(() =>
+    String(reverificationContext?.documentNumber || "")
+  );
 
-  const [referenceName, setReferenceName] = useState(() => location.state?.referenceName || "");
+  const [referenceName, setReferenceName] = useState(() =>
+    reverificationContext?.existingDocumentId
+      ? String(reverificationContext.existingFullName || "")
+      : location.state?.referenceName || ""
+  );
 
-  const [referenceDob, setReferenceDob] = useState("");
+  const [referenceDob, setReferenceDob] = useState(() =>
+    reverificationContext?.existingDocumentId
+      ? formatDobDisplay(String(reverificationContext.existingDob || ""))
+      : ""
+  );
 
   const [selectedFile, setSelectedFile] = useState(null);
-  const [screeningMode, setScreeningMode] = useState(() => location.state?.screeningMode || "SINGLE_DOCUMENT");
+  const [screeningMode, setScreeningMode] = useState(() =>
+    reverificationContext?.existingDocumentId
+      ? "REFERENCE_FORM"
+      : location.state?.screeningMode || "SINGLE_DOCUMENT"
+  );
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -148,15 +154,6 @@ export default function ForensicDeepDive() {
 
   const faceCaptureRequired =
     screeningMode === "REFERENCE_FORM" && FACE_CAPTURE_DOCUMENT_TYPES.has(idType);
-
-  useEffect(() => {
-    if (!reverificationContext?.existingDocumentId) return;
-    setIdType(String(reverificationContext.idType || idType).toUpperCase());
-    setIdNumber(String(reverificationContext.documentNumber || ""));
-    setReferenceName(String(reverificationContext.existingFullName || ""));
-    setReferenceDob(formatDobDisplay(String(reverificationContext.existingDob || "")));
-    setScreeningMode("REFERENCE_FORM");
-  }, []);
 
   const stopLivenessMonitor = () => {
     if (motionTimerRef.current) {
@@ -363,20 +360,6 @@ export default function ForensicDeepDive() {
     setCameraError("");
   };
 
-  const startNewUser = async () => {
-    try {
-      await fetch("/api/user-logout", {
-        method: "POST",
-        credentials: "include",
-      });
-    } catch {}
-
-    sessionStorage.removeItem("userEmail");
-    sessionStorage.removeItem("uniqueId");
-    sessionStorage.removeItem("latestAnalysisResult");
-    window.location.reload();
-  };
-
   const handleFileChange = (event) => {
     const file = event.target.files?.[0] || null;
     setSelectedFile(file);
@@ -465,7 +448,6 @@ export default function ForensicDeepDive() {
 
   useEffect(() => {
     if (!isAnalyzing) {
-      setAnalysisStep(0);
       return undefined;
     }
     const timer = window.setInterval(() => {
@@ -548,6 +530,7 @@ export default function ForensicDeepDive() {
       return;
     }
 
+    setAnalysisStep(0);
     setIsAnalyzing(true);
     setAnalysisStep(0);
 
@@ -789,57 +772,6 @@ export default function ForensicDeepDive() {
       default:
         return "Enter document number";
     }
-  };
-
-  const formatValue = (value) => {
-    if (value === null || value === undefined || value === "") {
-      return "N/A";
-    }
-
-    if (typeof value === "object") {
-      try {
-        return JSON.stringify(value);
-      } catch {
-        return String(value);
-      }
-    }
-
-    return String(value);
-  };
-
-  const getStatusClass = (status) => {
-    const value = String(status || "").toUpperCase();
-
-    if (
-      value.includes("MISMATCH") ||
-      value.includes("HIGH") ||
-      value.includes("FAILED") ||
-      value.includes("REJECTED")
-    ) {
-      return "bg-red-100 text-red-800 border-red-300";
-    }
-
-    if (
-      value.includes("PARTIAL") ||
-      value.includes("MEDIUM") ||
-      value.includes("REVIEW") ||
-      value.includes("ADDED")
-    ) {
-      return "bg-amber-100 text-amber-800 border-amber-300";
-    }
-
-    if (
-      value.includes("MATCH") ||
-      value.includes("LOW") ||
-      value.includes("SUCCESS") ||
-      value.includes("VERIFIED") ||
-      value.includes("CREATED") ||
-      value.includes("STORED")
-    ) {
-      return "bg-emerald-100 text-emerald-800 border-emerald-300";
-    }
-
-    return "bg-slate-100 text-slate-700 border-slate-300";
   };
 
   return (
