@@ -29,7 +29,7 @@ function ProtectedUserRoute({ children }) {
     const userEmail = sessionStorage.getItem("userEmail");
     const uniqueId = sessionStorage.getItem("uniqueId");
 
-    return authenticated && userEmail && uniqueId
+    return authenticated && userEmail && /^\d{10}$/.test(uniqueId || "")
       ? "authenticated"
       : "checking";
   });
@@ -48,7 +48,6 @@ function ProtectedUserRoute({ children }) {
     
     
     if (localSessionLooksValid) {
-      setStatus("authenticated");
       return () => {
         cancelled = true;
       };
