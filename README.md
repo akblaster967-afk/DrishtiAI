@@ -149,7 +149,7 @@ npm run lint
 npm run build
 ```
 
-These commands are available for linting and building the frontend. Run them in your environment and add the actual results to the project documentation only after they pass. Backend tests should also be added and run before describing the project as tested.
+These commands are available for linting and building the frontend. A GitHub Actions workflow in `.github/workflows/frontend-checks.yml` runs both checks on pushes and pull requests targeting `main`; check the repository's **Actions** tab for the actual result. Backend tests should also be added and run before describing the project as fully tested.
 
 ## Security and privacy notes
 
