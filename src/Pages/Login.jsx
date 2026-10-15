@@ -15,7 +15,7 @@ async function api(path, body) {
   try {
     result = text ? JSON.parse(text) : {};
   } catch {
-    
+    // The API may return a non-JSON error body; use the fallback message below.
   }
   if (!response.ok) {
     const detail = result.detail || result.message;
