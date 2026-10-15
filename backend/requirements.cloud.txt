@@ -3,7 +3,7 @@
 # the backend falls back automatically when these are not installed.
 fastapi
 uvicorn
-opencv-python-headless
+opencv-python-headless==4.11.0.86
 numpy
 pillow
 pymupdf
