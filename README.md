@@ -93,7 +93,21 @@ If your operating system blocks PowerShell script activation, use a terminal/ses
 
 ### 3. Configure environment variables
 
-The backend loads `backend/.env`. Create that file locally if you need email verification or password-reset email features. The application reads these optional settings:
+Copy `backend/.env.example` to `backend/.env`, then replace the placeholder session secret with a long, random, unique value before using authentication.
+
+**Windows PowerShell**
+```powershell
+Copy-Item backend/.env.example backend/.env
+python -c "import secrets; print(secrets.token_urlsafe(48))"
+```
+
+**macOS / Linux**
+```bash
+cp backend/.env.example backend/.env
+python -c "import secrets; print(secrets.token_urlsafe(48))"
+```
+
+Paste the generated value into `VERIFYSHIELD_SESSION_SECRET` in `backend/.env`. The example value is only a placeholder. Do not use the application's development fallback secret in any shared or deployed environment. SMTP settings are optional unless you need email verification or password-reset email features. The application reads these settings:
 
 | Variable | Purpose |
 | --- | --- |
