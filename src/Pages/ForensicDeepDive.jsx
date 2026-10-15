@@ -532,7 +532,6 @@ export default function ForensicDeepDive() {
 
     setAnalysisStep(0);
     setIsAnalyzing(true);
-    setAnalysisStep(0);
 
     try {
       fetch("/api/audit-events", {
